@@ -57,7 +57,7 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
        - reply/counterparty resolution (de web/src/mail.tsx:110+)
        - folder slug mapping (de web/src/router.tsx)
        - address parsing "Name <addr>"
-- [ ] 4. `engine`: partir bermail/packages/core:
+- [x] 4. `engine`: partir bermail/packages/core:
        - imap.ts, imap-monitor.ts, sync.ts, user-manager.ts, session-store.ts
        - MailService: subir la lógica de route-messages.ts (trash está escrito
          6 veces en handlers) a métodos
@@ -86,11 +86,12 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
         Quitar flag muerta --print-password; ~/.bmailctl.json documentado pero
         nunca leído (implementarlo o quitarlo del texto)
 - [ ] 11. ATTACHMENTS (nuevo, pedido 2026-08-25):
-        - engine: extraer adjuntos en getMessage (mailparser ya los parsea),
+        - [x] engine: extraer adjuntos en getMessage (mailparser ya los parsea),
           exponer listado {filename, contentType, size, partId} en FullMessage
+          (+ MailService.getAttachment(folder, uid, partId) → bytes)
         - server: GET /api/mailboxes/:folder/messages/:uid/attachments/:partId
           (stream, Content-Disposition attachment)
-        - engine/SmtpSender: adjuntos en envío (nodemailer attachments)
+        - [x] engine/SmtpSender: adjuntos en envío (nodemailer attachments)
         - contract: tipos AttachmentInfo; client: métodos download/upload
         - ui/web: chips de adjuntos en MessageView + adjuntar en Composer
 - [ ] 12. apps/mcp (nuevo, pedido 2026-08-25): servidor MCP "bmail" para controlar
@@ -153,3 +154,12 @@ subject, FTS5) OK.
   (slugs Maddy). 26 tests node:test verdes. Pendiente: db aún tiene su copia
   privada de normalizeSubject/computeThreadId — que importe de domain cuando
   se vuelva a tocar db.
+- `@bmail/engine` (paso 4 + engine de 11): ImapService/ImapMonitor/SyncEngine/
+  UserManager/SessionStore inyectables (MailRepository + OrgRegistry como
+  datos con fixture de los 3 orgs, DisplayNameResolver con cache por mtime),
+  MailService (trash/move/flags/getMessage con adjuntos + getAttachment por
+  partId = índice 1-based de mailparser, re-parsea el source — optimizar
+  persistiendo metadata si duele), SmtpSender (creds explícitas, Sent copy
+  best-effort con mismo Message-ID, attachments), InsightProvider plugin
+  opcional + AnthropicInsightProvider (claude-haiku-4-5). El ws-hub NO migró:
+  el engine expone ChangeNotifier (interface) y el hub real va a apps/server.

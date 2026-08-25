@@ -8,6 +8,7 @@
   "references": [
     { "path": "packages/contract" },
     { "path": "packages/domain" },
-    { "path": "packages/db" }
+    { "path": "packages/db" },
+    { "path": "packages/engine" }
   ]
 }

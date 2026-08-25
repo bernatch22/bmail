@@ -1,0 +1,33 @@
+{
+  "name": "@bmail/engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "BMail mail engine: IMAP, sync, sessions, sending and AI insights. No HTTP, no WebSocket — apps wire the transport.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.87.0",
+    "@bmail/contract": "*",
+    "@bmail/db": "*",
+    "imapflow": "^1.0.0",
+    "mailparser": "^3.9.8",
+    "nodemailer": "^8.0.5"
+  },
+  "devDependencies": {
+    "@types/mailparser": "^3.4.6",
+    "@types/node": "^22.0.0",
+    "@types/nodemailer": "^8.0.0",
+    "typescript": "^5.5.0"
+  }
+}
