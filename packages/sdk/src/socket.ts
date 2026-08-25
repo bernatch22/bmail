@@ -19,6 +19,9 @@ import type { WebSocketConstructorLike, WebSocketLike } from './types.js';
 
 export type WsListener = (event: WsEvent) => void;
 
+/** Notified when the connection opens (`true`) or drops (`false`). */
+export type WsStatusListener = (connected: boolean) => void;
+
 export interface BmailSocketOptions {
   /** Full ws:// or wss:// URL of the server's realtime endpoint. */
   url: string;
@@ -45,6 +48,8 @@ const RECONNECT_MAX_DELAY_MS = 30_000;
 export class BmailSocket {
   private readonly _options: BmailSocketOptions;
   private readonly _listeners: Set<WsListener> = new Set();
+  private readonly _statusListeners: Set<WsStatusListener> = new Set();
+  private _connected = false;
 
   private _ws: WebSocketLike | null = null;
   private _reconnectTimer: ReturnType<typeof setTimeout> | null = null;
@@ -75,6 +80,7 @@ export class BmailSocket {
     this._ws.onopen = () => {
       // A successful connection resets the backoff schedule.
       this._reconnectAttempts = 0;
+      this._announce(true);
     };
 
     this._ws.onmessage = (event) => {
@@ -82,6 +88,8 @@ export class BmailSocket {
     };
 
     this._ws.onclose = () => {
+      this._announce(false);
+
       if (!this._closedByUser) {
         this._scheduleReconnect();
       }
@@ -120,7 +128,46 @@ export class BmailSocket {
     this._listeners.delete(listener);
   }
 
+  /**
+   * Register a listener for the CONNECTION itself: `true` on open, `false`
+   * on close, every time. Returns the matching unsubscribe function.
+   *
+   * Without this a consumer cannot tell "nothing new has arrived" from "I
+   * stopped being told", because the reconnect is silent by design. Anything
+   * that shows a live indicator needs the difference; the reconnect loop
+   * keeps running either way.
+   */
+  onStatus(listener: WsStatusListener): () => void {
+    this._statusListeners.add(listener);
+    return () => {
+      this._statusListeners.delete(listener);
+    };
+  }
+
+  /** True while the socket is open. */
+  get connected(): boolean {
+    return this._connected;
+  }
+
   // ─── Internals ───────────────────────────────────────
+
+  /** Tell the status listeners, but only when the state actually changed. */
+  private _announce(connected: boolean): void {
+    if (this._connected === connected) {
+      return;
+    }
+
+    this._connected = connected;
+
+    for (const listener of this._statusListeners) {
+      try {
+        listener(connected);
+      } catch {
+        // A listener that throws must not break the socket, and must not
+        // stop the listeners after it.
+      }
+    }
+  }
 
   private _buildUrl(): string {
     const token = this._options.token?.();

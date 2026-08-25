@@ -111,3 +111,41 @@ test('BmailClient.connect derives ws URL from the https baseUrl', () => {
   assert.equal(Impl.instances[0].url, 'wss://mail.test/ws');
   socket.disconnect();
 });
+
+// ─── Connection status ─────────────────────────────────
+
+test('onStatus reports open and close, and only on a real change', () => {
+  const sockets = [];
+
+  class FakeSocket {
+    constructor(url) {
+      this.url = url;
+      this.onopen = null;
+      this.onmessage = null;
+      this.onclose = null;
+      this.onerror = null;
+      sockets.push(this);
+    }
+    close() {
+      this.onclose?.({});
+    }
+  }
+
+  const socket = new BmailSocket({ url: 'wss://example.test/ws', WebSocketImpl: FakeSocket });
+  const seen = [];
+  socket.onStatus((connected) => seen.push(connected));
+
+  socket.connect();
+  assert.equal(socket.connected, false, 'not connected until the socket opens');
+
+  sockets[0].onopen({});
+  assert.equal(socket.connected, true);
+
+  // A second open without an intervening close must not repeat the event.
+  sockets[0].onopen({});
+
+  socket.disconnect();
+
+  assert.deepEqual(seen, [true, false]);
+  assert.equal(socket.connected, false);
+});
