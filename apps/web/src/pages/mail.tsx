@@ -1,23 +1,23 @@
 /**
- * mail.tsx — The mail page: wires @bmail/ui components to the SDK.
+ * mail.tsx — The mail page: wires @bmail/react components to the SDK.
  *
  * This is where the SPA earns the word "thin": every callback the UI
- * components expose is implemented here over @bmail/client, with the
+ * components expose is implemented here over @bmail/sdk, with the
  * optimistic store updates that used to live inside the components.
- * Reply/forward semantics come from @bmail/domain, not inline regexes.
+ * Reply/forward semantics come from @bmail/core/logic, not inline regexes.
  */
 
 import { useCallback, useEffect } from 'react';
 import type { NavigateFunction } from 'react-router';
 
-import type { AttachmentInfo, FullMessage, MessageEnvelope } from '@bmail/contract';
+import type { AttachmentInfo, FullMessage, MessageEnvelope } from '@bmail/core/types';
 import {
   buildForwardSubject,
   buildReplySubject,
   folderToSlug,
   resolveReplyRecipients,
-} from '@bmail/domain';
-import type { OutgoingAttachment } from '@bmail/client';
+} from '@bmail/core/logic';
+import type { OutgoingAttachment } from '@bmail/sdk';
 import {
   ComposePane,
   MailDisplay,
@@ -27,7 +27,7 @@ import {
   usePaneGrid,
   type ComposeDraft,
   type ComposeSubmission,
-} from '@bmail/ui';
+} from '@bmail/react';
 
 import { useAuth } from '../auth.js';
 import { client } from '../lib/client.js';
@@ -337,7 +337,7 @@ export function MailPage({ navigate }: MailPageProps) {
 
   // Reply to a specific message (Gmail-style, per thread card). WHO the
   // reply goes to — including the self-addressed corner case — is decided
-  // by @bmail/domain, where it is unit-tested.
+  // by @bmail/core/logic, where it is unit-tested.
   const handleReplyMessage = useCallback((message: FullMessage) => {
     const recipients = resolveReplyRecipients(message, state.threadMessages, myEmail);
 

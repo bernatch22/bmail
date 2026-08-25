@@ -2,12 +2,12 @@
  * router.tsx — Auth-gated routes.
  *
  * /login is public; everything else requires a session. Folder slug ↔ IMAP
- * path mapping lives in @bmail/domain (folders.ts), not here.
+ * path mapping lives in @bmail/core/logic (folders.ts), not here.
  */
 
 import { createBrowserRouter, Navigate, Outlet } from 'react-router';
 
-import { TooltipProvider } from '@bmail/ui';
+import { TooltipProvider } from '@bmail/react';
 
 import App from './app.js';
 import { AuthProvider, useAuth } from './auth.js';

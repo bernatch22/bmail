@@ -17,7 +17,7 @@ import {
   DisplayNameResolver,
   SmtpSender,
   buildAccountConfig,
-} from '@bmail/engine';
+} from '@bmail/core';
 
 // ── the session ───────────────────────────────────────────────────────────────
 

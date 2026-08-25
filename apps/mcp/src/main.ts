@@ -3,10 +3,10 @@
  * main.ts — the "bmail" MCP server over stdio.
  *
  * One server, two tool families:
- *  - admin_* over @bmail/infra: Maddy mailboxes, SES organizations and DNS
+ *  - admin_* over @bmail/admin: Maddy mailboxes, SES organizations and DNS
  *    record sets, using the operator's local gcloud/aws sessions exactly
  *    like bmailctl does.
- *  - mail_* over @bmail/engine: the active user's mailbox by direct
+ *  - mail_* over @bmail/core: the active user's mailbox by direct
  *    IMAP/SMTP — no local database, no sync.
  *
  * Install into the assistants on this machine:

@@ -2,71 +2,79 @@
 
 Self-hosted mail platform, as a TypeScript monorepo.
 
-The backend stack is **Maddy** (IMAP/submission on a GCP VM, `bc-mail`) with
-outbound relay through **Amazon SES** and DNS in **Route 53**. On top of that
-this repo provides reusable libraries (contract types, pure mail logic, an
-HTTP+WS SDK, React components, a SQLite cache, the sync/send engine, and infra
-automation), plus the apps: an API server, the webmail SPA, the `bmailctl`
-admin CLI, and an MCP server so the whole platform can be driven from Claude.
+The backend stack is **Maddy** (IMAP/submission on the `bc-mail` VM, reached
+over plain SSH) with outbound relay through **Amazon SES** and DNS in
+**Route 53**. On top of that this repo provides four libraries — the mail
+engine, the client SDK, the React components and the admin library — plus the
+apps: an API server, the webmail SPA, the `bmailctl` admin CLI, and an MCP
+server so the whole platform can be driven from Claude.
 
 It is the extraction of the previously monolithic `bermail` webmail and
 `bmailctl` v0 script into clean, platform-agnostic packages (web / mobile /
-desktop ready). See `CLAUDE.md` for the migration plan and its current state.
+desktop ready). See `CLAUDE.md` for the plan and its current state.
+
+The libraries are grouped by **who consumes them**, not by layer: building a
+client app means `@bmail/sdk` (plus `@bmail/react` if it is React); running the
+service means `@bmail/core`; operating domains and mailboxes means
+`@bmail/admin`. One question, one answer.
 
 ## Architecture
 
 ```
-                 ┌──────────────────────── apps ────────────────────────┐
-                 │  apps/server   Express + WS API (routes + wiring)    │
-                 │  apps/web      webmail SPA (Vite + React)            │
-                 │  apps/bmailctl admin CLI (accounts + orgs)           │
-                 │  apps/mcp      "bmail" MCP server (13 tools, stdio)  │
-                 └──────────┬───────────────┬──────────────┬────────────┘
-                            │               │              │
-                     ┌──────▼─────┐   ┌─────▼─────┐  ┌─────▼─────┐
-                     │ @bmail/ui  │   │  @bmail/  │  │  @bmail/  │
-                     │  (React)   │   │  client   │  │   infra   │
-                     └──────┬─────┘   │ (HTTP+WS) │  │(SES/R53/  │
-                            │         └─────┬─────┘  │  Maddy)   │
-              ┌─────────────┼───────────────┤        └─────┬─────┘
-        ┌─────▼─────┐ ┌─────▼──────┐        │              │
-        │ @bmail/db │ │@bmail/engine│       │              │
-        │ (SQLite + │ │ (IMAP/sync/ │       │              │
-        │   FTS5)   │ │ send/users) │       │              │
-        └─────┬─────┘ └─────┬──────┘        │              │
-              └───────┬─────┴───────────────┴──────────────┘
-               ┌──────▼───────┐
-               │ @bmail/domain│  pure mail logic, zero I/O
-               └──────┬───────┘
-               ┌──────▼────────┐
-               │ @bmail/contract│  shared wire types, zero deps
-               └───────────────┘
+        ┌─────────────────────────── apps ───────────────────────────┐
+        │  apps/server   Express + WS API (routes + wiring)          │
+        │  apps/web      webmail SPA (Vite + React)                  │
+        │  apps/cli      bmailctl — accounts and organizations       │
+        │  apps/mcp      "bmail" MCP server (13 tools, stdio)        │
+        └───┬──────────────┬───────────────┬──────────────┬──────────┘
+            │              │               │              │
+     ┌──────▼──────┐ ┌─────▼──────┐  ┌─────▼──────┐       │
+     │ @bmail/react│ │ @bmail/sdk │  │@bmail/admin│       │
+     │  components │ │  HTTP + WS │  │ SES · R53  │       │
+     │             │ │            │  │ Maddy/SSH  │       │
+     └──────┬──────┘ └─────┬──────┘  └────────────┘       │
+            │              │                              │
+            └──────┬───────┘                              │
+                   │  (types + logic only)                │
+            ┌──────▼──────────────────────────────────────▼──────┐
+            │                   @bmail/core                      │
+            │                                                    │
+            │   types/  wire shapes .............. zero deps     │
+            │   logic/  threading, reply, addresses .. zero I/O  │
+            │   store/  SQLite + FTS5, MailRepository            │
+            │   mail/   IMAP · sync · SMTP · sessions · AI       │
+            └────────────────────────────────────────────────────┘
 ```
 
-Dependency rule, one way only:
+Dependency rule, one way only — between packages:
 
 ```
-contract ← domain ← (client | db | engine | infra) ← ui ← apps
+core ← (sdk | react | admin) ← apps
 ```
 
-Nothing imports "up". `contract` has zero runtime dependencies; `domain` is
-pure functions; the engine never touches HTTP or WebSockets (it only knows the
-`ChangeNotifier` interface — the real WS hub lives in `apps/server`).
+and inside `core`, between folders:
+
+```
+types ← logic ← store ← mail
+```
+
+Nothing imports "up". `types/` has zero runtime dependencies and `logic/` is
+pure functions, which is why `sdk` and `react` can reach into `@bmail/core/types`
+and `@bmail/core/logic` without dragging sqlite or imapflow into a browser
+bundle. The engine never touches HTTP or WebSockets either: it only knows the
+`ChangeNotifier` interface — the real WS hub lives in `apps/server`.
 
 ## Packages and apps
 
 | Workspace | Purpose | Docs |
 |---|---|---|
-| `packages/contract` | Shared wire types (`MessageEnvelope`, `FullMessage`, `WsEvent`, …). Zero deps. | [docs/API.md](docs/API.md#bmailcontract) |
-| `packages/domain` | Pure mail logic: threading, reply resolution, quote/forward HTML, address parsing, folder slugs. | [docs/API.md](docs/API.md#bmaildomain) |
-| `packages/client` | Platform-agnostic HTTP+WS SDK (`BmailClient`, `BmailSocket`). Browser / Node / React Native. | [docs/API.md](docs/API.md#bmailclient-sdk) |
-| `packages/ui` | Presentational React components (MailList, MailDisplay, ComposePane, …). No fetch inside. | [src/index.ts](packages/ui/src/index.ts) |
-| `packages/db` | Local mail cache: Drizzle + better-sqlite3 + FTS5, injectable connection, `MailRepository`. | [docs/API.md](docs/API.md#bmaildb) |
-| `packages/engine` | The core: `ImapService`, `ImapMonitor`, `SyncEngine`, `UserManager`, `MailService`, `SmtpSender`, AI insights plugin. | [docs/API.md](docs/API.md#bmailengine) |
-| `packages/infra` | Platform ops as a library: SES identities, Route 53, Maddy over SSH, client DNS record sets. | [docs/API.md](docs/API.md#bmailinfra) |
-| `apps/server` | Express + WS API server: thin routes over engine + db. | [docs/API.md](docs/API.md#rest-api-appsserver) |
-| `apps/web` | Webmail SPA (Vite + React) over `ui` + `client`. | — |
-| `apps/bmailctl` | Admin CLI over `infra`: accounts, orgs, DNS records. | `bmailctl --help` |
+| `packages/core` | The engine: wire types, pure mail logic, the SQLite cache and IMAP/sync/SMTP/sessions/AI. Subpaths: `/types`, `/logic`, `/store`, `/mail`. | [docs/API.md](docs/API.md#bmailcore) |
+| `packages/sdk` | Platform-agnostic HTTP+WS SDK (`BmailClient`, `BmailSocket`). Browser / Node / React Native. | [docs/API.md](docs/API.md#bmailsdk) |
+| `packages/react` | Presentational React components (MailList, MailDisplay, ComposePane, …). No fetch inside. | [src/index.ts](packages/react/src/index.ts) |
+| `packages/admin` | Platform ops as a library: SES identities, Route 53, Maddy over SSH, client DNS record sets. | [docs/API.md](docs/API.md#bmailadmin) |
+| `apps/server` | Express + WS API server: thin routes over `core`. | [docs/API.md](docs/API.md#rest-api-appsserver) |
+| `apps/web` | Webmail SPA (Vite + React) over `sdk` + `react`. | — |
+| `apps/cli` | Admin CLI over `admin` — the bin is still `bmailctl`. | `bmailctl --help` |
 | `apps/mcp` | MCP server "bmail": admin + live mailbox tools for Claude and other assistants. | [apps/mcp/README.md](apps/mcp/README.md) |
 
 ## Quickstart
@@ -77,9 +85,7 @@ Requirements: Node >= 18 (native fetch), npm workspaces.
 npm install          # install all workspaces
 npx tsc -b           # build everything (project references)
 
-# tests live per package (node:test):
-npm test -w @bmail/domain
-npm test -w @bmail/client
+npm test              # every package that has tests (node:test)
 ```
 
 Run the API server (needs `SESSION_SECRET`; reads the mail cache from
@@ -95,11 +101,11 @@ Run the webmail in dev (proxies `/api` and `/ws` to `127.0.0.1:3001`):
 npm run dev -w @bmail/web
 ```
 
-Admin CLI (drives Maddy over plain SSH (keys, `~/.ssh/config` alias `bc-mail`) and SES/Route 53 over local `aws`
-credentials; config via `BMAIL_*` env vars or `~/.bmailctl.json`):
+Admin CLI (drives Maddy over plain SSH — keys, `~/.ssh/config` alias
+`bc-mail` — and SES/Route 53 over local `aws` credentials; config via `BMAIL_*` env vars or `~/.bmailctl.json`):
 
 ```sh
-node apps/bmailctl/dist/bmailctl.js --help
+node apps/cli/dist/main.js --help
 bmailctl account create someone@example.com --name "Some One"
 bmailctl org records example.com --lean
 ```
@@ -125,6 +131,7 @@ is documented in [CLAUDE.md — "Cutover a producción"](CLAUDE.md#cutover-a-pro
 ## Status
 
 Migration steps 0–12 are done (all packages, server, web, bmailctl, MCP
-server, attachments end to end). Pending: e2e Playwright migration and the
-final naming unification. The legacy `bermail` deployment remains what is live
-in production until `apps/server` + `apps/web` are validated there.
+server, attachments end to end), and the seven original packages have been
+consolidated into the four above. Pending: the e2e Playwright migration.
+`apps/server` + `apps/web` are what production serves today; the legacy
+`bermail` process stays parked on `:3001` as the rollback.

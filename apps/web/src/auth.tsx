@@ -7,7 +7,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
-import type { AuthUser } from '@bmail/contract';
+import type { AuthUser } from '@bmail/core/types';
 
 import { client } from './lib/client.js';
 

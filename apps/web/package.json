@@ -3,17 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "BMail web SPA: thin router/auth/store wiring over @bmail/ui components and the @bmail/client SDK.",
+  "description": "BMail web SPA: thin router/auth/store wiring over @bmail/react components and the @bmail/sdk SDK.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@bmail/client": "*",
-    "@bmail/contract": "*",
-    "@bmail/domain": "*",
-    "@bmail/ui": "*",
+    "@bmail/core": "*",
+    "@bmail/react": "*",
+    "@bmail/sdk": "*",
     "@fontsource-variable/geist": "^5.2.8",
     "lucide-react": "^1.8.0",
     "react": "^19.0.0",

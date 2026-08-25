@@ -13,9 +13,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@bmail/contract": "*",
-    "@bmail/engine": "*",
-    "@bmail/infra": "*",
+    "@bmail/admin": "*",
+    "@bmail/core": "*",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "zod": "^3.25.76"
   },

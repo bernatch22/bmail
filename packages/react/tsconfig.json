@@ -1,0 +1,22 @@
+{
+  // @bmail/react — the React component library.
+  //
+  // Overrides the shared NodeNext module settings: this package is consumed
+  // by bundlers (Vite), not by Node, so it compiles JSX and resolves
+  // front-end dependencies (radix-ui, lucide-react) the way a bundler does.
+  //
+  // It touches @bmail/core only through /types and /logic — both dependency
+  // free — so the browser bundle never sees sqlite or imapflow.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../core" }
+  ]
+}

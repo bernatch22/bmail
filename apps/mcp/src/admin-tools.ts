@@ -1,5 +1,5 @@
 /**
- * admin-tools.ts — platform administration over @bmail/infra.
+ * admin-tools.ts — platform administration over @bmail/admin.
  *
  * These tools run the same operations bmailctl runs, using the operator's
  * local gcloud and aws sessions: Maddy mailboxes over gcloud ssh, SES
@@ -25,7 +25,7 @@ import {
   buildLegacyFullRecords,
   buildLeanRecords,
   formatRecordsForClient,
-} from '@bmail/infra';
+} from '@bmail/admin';
 
 import { jsonResult, errorResult, runTool } from './tool-results.js';
 

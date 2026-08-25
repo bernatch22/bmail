@@ -9,7 +9,7 @@
 import { Router } from 'express';
 import type { Response, Router as ExpressRouter } from 'express';
 
-import type { MailRepository } from '@bmail/db/repository';
+import type { MailRepository } from '@bmail/core/store';
 
 import type { AuthedRequest } from './auth.js';
 
@@ -184,7 +184,7 @@ export function createMailboxRoutes(repository: MailRepository): ExpressRouter {
   //
   // These two are not in the uniform action table above: move needs a body
   // parameter (the destination folder) and delete uses the HTTP verb on the
-  // message resource itself, matching what the @bmail/client SDK expects.
+  // message resource itself, matching what the @bmail/sdk SDK expects.
 
   router.post(
     '/:folder/messages/:uid/move',

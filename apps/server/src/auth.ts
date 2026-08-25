@@ -15,7 +15,7 @@ import type { IncomingMessage } from 'node:http';
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-import type { SessionStore, Session, UserManager, UserTrio } from '@bmail/engine';
+import type { SessionStore, Session, UserManager, UserTrio } from '@bmail/core';
 
 // ─── Shapes ────────────────────────────────────────────
 

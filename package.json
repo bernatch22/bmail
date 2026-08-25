@@ -2,7 +2,7 @@
   "name": "bmail",
   "private": true,
   "version": "0.0.0",
-  "description": "BMail monorepo: shared contract, domain logic, db, engine, infra and apps",
+  "description": "BMail monorepo: the mail engine, the client SDK, React components, the admin library and the apps on top",
   "workspaces": [
     "packages/*",
     "apps/*"
@@ -11,7 +11,7 @@
     "build": "tsc -b",
     "clean": "tsc -b --clean",
     "dev": "echo 'TODO: wire per-app dev scripts (step 5+)' && exit 1",
-    "test": "echo 'TODO: wire test runner once packages have tests' && exit 1"
+    "test": "npm test --workspaces --if-present"
   },
   "devDependencies": {
     "typescript": "^5.5.0"

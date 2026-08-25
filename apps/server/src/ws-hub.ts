@@ -9,8 +9,8 @@
 
 import type { WebSocket } from 'ws';
 
-import type { WsEvent } from '@bmail/contract';
-import type { ChangeNotifier } from '@bmail/engine';
+import type { WsEvent } from '@bmail/core/types';
+import type { ChangeNotifier } from '@bmail/core';
 
 export class WsHub implements ChangeNotifier {
   private readonly socketsByUser = new Map<string, Set<WebSocket>>();

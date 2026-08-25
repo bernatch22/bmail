@@ -1,0 +1,11 @@
+{
+  // @bmail/core — the leaf of the dependency graph: it references nothing.
+  // The internal layering (types → logic → store → mail) is a convention
+  // enforced by review, not by four separate compilations.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}

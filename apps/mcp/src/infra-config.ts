@@ -5,7 +5,7 @@
  * sessions and overrides behave identically from Claude and from the CLI:
  * built-in defaults < BMAIL_* env < ~/.bmailctl.json.
  *
- * The ~/.bmailctl.json reader is duplicated from apps/bmailctl on purpose:
+ * The ~/.bmailctl.json reader is duplicated from apps/cli on purpose:
  * apps must not import from each other, and the file format is the shared
  * contract, not the code.
  */
@@ -14,7 +14,7 @@ import { readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 
-import { loadConfig, type InfraConfig } from '@bmail/infra';
+import { loadConfig, type InfraConfig } from '@bmail/admin';
 
 // ── ~/.bmailctl.json overrides ────────────────────────────────────────────────
 

@@ -3,8 +3,8 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
-/* Tailwind must scan the @bmail/ui sources for the classes its components use. */
-@source "../../../packages/ui/src";
+/* Tailwind must scan the @bmail/react sources for the classes its components use. */
+@source "../../../packages/react/src";
 
 @custom-variant dark (&:is(.dark *));
 

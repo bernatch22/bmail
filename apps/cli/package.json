@@ -1,0 +1,21 @@
+{
+  "name": "@bmail/cli",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Thin CLI over @bmail/admin: mailboxes and organization onboarding for the self-hosted email stack",
+  "type": "module",
+  "bin": {
+    "bmailctl": "./dist/main.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@bmail/admin": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}

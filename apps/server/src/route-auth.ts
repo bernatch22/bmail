@@ -19,7 +19,7 @@ import {
   type OrgRegistry,
   type SessionStore,
   type UserManager,
-} from '@bmail/engine';
+} from '@bmail/core';
 
 import { SESSION_COOKIE, extractToken, resolveSession } from './auth.js';
 

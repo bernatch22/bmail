@@ -3,13 +3,13 @@
  *
  * Holds mailboxes, the current folder page, the selected conversation and
  * the compose draft. UI components never read this directly — the pages
- * translate it into props for @bmail/ui.
+ * translate it into props for @bmail/react.
  */
 
 import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from 'react';
 
-import type { FullMessage, MailboxInfo, MessageEnvelope } from '@bmail/contract';
-import type { ComposeDraft, Theme } from '@bmail/ui';
+import type { FullMessage, MailboxInfo, MessageEnvelope } from '@bmail/core/types';
+import type { ComposeDraft, Theme } from '@bmail/react';
 
 // ─── State shape ───────────────────────────────────────
 

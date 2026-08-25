@@ -3,7 +3,7 @@
   //
   // tsc -b only type-checks (declarations go to dist-types and are unused);
   // the real build artifact comes from `vite build`. Module settings follow
-  // the bundler, like @bmail/ui.
+  // the bundler, like @bmail/react.
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
@@ -15,9 +15,8 @@
   },
   "include": ["src"],
   "references": [
-    { "path": "../../packages/contract" },
-    { "path": "../../packages/domain" },
-    { "path": "../../packages/client" },
-    { "path": "../../packages/ui" }
+    { "path": "../../packages/core" },
+    { "path": "../../packages/sdk" },
+    { "path": "../../packages/react" }
   ]
 }

@@ -1,0 +1,51 @@
+{
+  "name": "@bmail/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The BMail engine: wire types, pure mail logic, the SQLite store and the IMAP/SMTP machinery. Server-side; apps wire the transport.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js"
+    },
+    "./logic": {
+      "types": "./dist/logic/index.d.ts",
+      "import": "./dist/logic/index.js"
+    },
+    "./store": {
+      "types": "./dist/store/index.d.ts",
+      "import": "./dist/store/index.js"
+    },
+    "./mail": {
+      "types": "./dist/mail/index.d.ts",
+      "import": "./dist/mail/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "tsc -b && node --test"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.87.0",
+    "better-sqlite3": "^11.0.0",
+    "drizzle-orm": "^0.39.0",
+    "imapflow": "^1.0.0",
+    "mailparser": "^3.9.8",
+    "nodemailer": "^8.0.5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/mailparser": "^3.4.6",
+    "@types/node": "^22.0.0",
+    "@types/nodemailer": "^8.0.0",
+    "typescript": "^5.5.0"
+  }
+}

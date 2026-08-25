@@ -2,7 +2,7 @@
   // tsconfig.json — @bmail/server build config.
   //
   // Extends the shared monorepo options; references let `tsc -b` build the
-  // engine/db/contract packages first and type-check against their .d.ts.
+  // core package first and type-check against their .d.ts.
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
@@ -10,8 +10,6 @@
   },
   "include": ["src"],
   "references": [
-    { "path": "../../packages/contract" },
-    { "path": "../../packages/db" },
-    { "path": "../../packages/engine" }
+    { "path": "../../packages/core" }
   ]
 }

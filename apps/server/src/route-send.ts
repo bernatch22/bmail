@@ -18,7 +18,7 @@
 import { Router } from 'express';
 import type { Response, Router as ExpressRouter } from 'express';
 
-import type { SmtpSender, OutgoingAttachment } from '@bmail/engine';
+import type { SmtpSender, OutgoingAttachment } from '@bmail/core';
 
 import type { AuthedRequest } from './auth.js';
 

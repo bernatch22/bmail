@@ -15,7 +15,7 @@ import { basename, extname, join, resolve } from 'node:path';
 
 import { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { ImapMessageEnvelope } from '@bmail/engine';
+import type { ImapMessageEnvelope } from '@bmail/core';
 
 import { jsonResult, errorResult, runTool } from './tool-results.js';
 import type { MailSession } from './mail-session.js';

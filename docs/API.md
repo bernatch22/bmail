@@ -1,10 +1,10 @@
 # BMail API reference
 
-Three parts: the REST/WS API served by `apps/server`, the `@bmail/client`
+Three parts: the REST/WS API served by `apps/server`, the `@bmail/sdk`
 SDK, and the library surfaces (`contract`, `domain`, `db`, `engine`, `infra`,
 plus the MCP tools).
 
-All shapes referenced below are the real types from `@bmail/contract` unless
+All shapes referenced below are the real types from `@bmail/core/types` unless
 noted otherwise.
 
 ---
@@ -107,7 +107,7 @@ should re-fetch through the HTTP API rather than trusting the payload.
 
 ---
 
-## @bmail/client SDK
+## @bmail/sdk
 
 Platform-agnostic: `fetch`, the WebSocket constructor and the base URL are
 injectable, so the same SDK runs in browsers, Node (>= 18) and React Native.
@@ -159,7 +159,7 @@ without recreating the socket.
 ### Example — web (cookie mode, same-origin)
 
 ```ts
-import { BmailClient } from '@bmail/client';
+import { BmailClient } from '@bmail/sdk';
 
 const client = new BmailClient({
   baseUrl: '',
@@ -180,7 +180,7 @@ const stop = socket.subscribe((event) => {
 ### Example — Node / native (bearer mode)
 
 ```ts
-import { BmailClient } from '@bmail/client';
+import { BmailClient } from '@bmail/sdk';
 import WebSocket from 'ws';
 
 const client = new BmailClient({
@@ -204,7 +204,11 @@ const socket = client.connect(); // wss://mail.example.com/ws?token=…
 
 ## Library surfaces
 
-### @bmail/contract
+`@bmail/core` is one package with four folders, each reachable on its own
+subpath. `types` and `logic` carry no runtime dependencies, so importing them
+from a browser or a phone costs nothing.
+
+### @bmail/core/types
 
 Shared wire types, zero runtime dependencies. Everything is
 JSON-serializable.
@@ -219,9 +223,9 @@ JSON-serializable.
 - `AuthUser` — `{ email, org }`
 - `OrgConfig`, `ImapConnConfig` — tenant shapes
 
-### @bmail/domain
+### @bmail/core/logic
 
-Pure functions, zero I/O, only depends on `contract`.
+Pure functions, zero I/O, depends only on `../types`.
 
 | Function | One line |
 |---|---|
@@ -239,7 +243,7 @@ Pure functions, zero I/O, only depends on `contract`.
 | `isSelfAddressed(from, to, myEmail)` | From me AND every recipient is me |
 | `folderToSlug(imapPath)` / `slugToFolder(slug)` | URL slug ↔ IMAP path (`MADDY_FOLDERS`, `FOLDER_SLUGS`) |
 
-### @bmail/db
+### @bmail/core/store
 
 SQLite cache of the mailbox (Drizzle typing + better-sqlite3 + FTS5).
 
@@ -256,11 +260,14 @@ SQLite cache of the mailbox (Drizzle typing + better-sqlite3 + FTS5).
   `updateMessageBody` / `hasMessageBody` (lazy body cache),
   `markAsSeen` / `markAsUnseen`, `deleteMessage`, `updateAiInsight`,
   `getUnprocessedMessages`, `getHighestUid`, `searchMessages` (FTS5).
-- `normalizeSubject` re-exported; `schema` exported for Drizzle typing.
+- `normalizeSubject` re-exported from `../logic` (one implementation);
+  `schema` exported for Drizzle typing.
 
-### @bmail/engine
+### @bmail/core/mail
 
-The core, extracted from bermail. No HTTP anywhere — the server wires it.
+The engine, extracted from bermail. No HTTP anywhere — the server wires it.
+It is also what the package root (`@bmail/core`) re-exports alongside the
+other three folders.
 
 | Class / function | Role |
 |---|---|
@@ -277,7 +284,7 @@ The core, extracted from bermail. No HTTP anywhere — the server wires it.
 | `ChangeNotifier` / `NullChangeNotifier` | Interface the server's WsHub implements |
 | `InsightProvider` / `AnthropicInsightProvider` | Optional AI-insight plugin |
 
-### @bmail/infra
+### @bmail/admin
 
 Platform ops as a library (used by `bmailctl`, the MCP server, and the future
 `bmaild-admin`). Drives Maddy over plain SSH with keys (`~/.ssh/config` alias `bc-mail`, override `BMAIL_SSH_TARGET`) and AWS over the local CLIs.
@@ -309,7 +316,7 @@ DNS record schemes:
 
 ### MCP tools (apps/mcp)
 
-Stdio MCP server `bmail` — 13 tools. Admin tools sit on `@bmail/infra` (local
+Stdio MCP server `bmail` — 13 tools. Admin tools sit on `@bmail/admin` (local
 SSH keys and local `aws` session); mail tools speak IMAP/SMTP directly, one fresh
 connection per call, no local DB. Credentials via `BMAIL_MCP_EMAIL` /
 `BMAIL_MCP_PASSWORD` or the `mail_login` tool (in-memory override).

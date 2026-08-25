@@ -4,7 +4,7 @@
  * Thin wiring only: build the engine pieces (db, org registry, sessions,
  * user manager, smtp sender, optional AI provider), mount the routes, and
  * bridge the WebSocket upgrade to the WsHub. All mail behavior lives in
- * @bmail/engine — a handler here should never be more than parse → call →
+ * @bmail/core — a handler here should never be more than parse → call →
  * serialize.
  *
  * Auth: users log in with email/password validated against Maddy IMAP.
@@ -20,8 +20,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { WebSocketServer } from 'ws';
 
-import { openDefaultDatabase } from '@bmail/db';
-import { MailRepository } from '@bmail/db/repository';
+import { openDefaultDatabase } from '@bmail/core/store';
+import { MailRepository } from '@bmail/core/store';
 import {
   AnthropicInsightProvider,
   DisplayNameResolver,
@@ -30,7 +30,7 @@ import {
   SmtpSender,
   UserManager,
   type InsightProvider,
-} from '@bmail/engine';
+} from '@bmail/core';
 
 import { loadServerConfig } from './config.js';
 import { WsHub } from './ws-hub.js';

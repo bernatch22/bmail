@@ -1,0 +1,37 @@
+{
+  "name": "@bmail/react",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Reusable React components for BMail: message list, thread view, composer, sidebar, pane grid. Presentation only \u2014 data and actions arrive through props, never through fetch.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@bmail/core": "*",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.8.0",
+    "marked": "^18.0.0",
+    "radix-ui": "^1.4.3",
+    "tailwind-merge": "^3.5.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.5.0"
+  }
+}

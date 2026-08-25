@@ -9,9 +9,9 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
-import type { WsEvent } from '@bmail/contract';
-import { slugToFolder } from '@bmail/domain';
-import type { BmailSocket } from '@bmail/client';
+import type { WsEvent } from '@bmail/core/types';
+import { slugToFolder } from '@bmail/core/logic';
+import type { BmailSocket } from '@bmail/sdk';
 
 import { useAuth } from './auth.js';
 import { client, deriveWsUrl } from './lib/client.js';

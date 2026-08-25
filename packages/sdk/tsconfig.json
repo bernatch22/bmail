@@ -1,0 +1,17 @@
+{
+  // @bmail/sdk — the client SDK. It depends on @bmail/core ONLY for the wire
+  // types (@bmail/core/types), and imports them type-only where it can, so
+  // nothing from the store or the IMAP machinery reaches a browser or phone.
+  //
+  // Tests live in test/*.test.mjs and import the built dist, so only src/
+  // is compiled here.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../core" }
+  ]
+}
