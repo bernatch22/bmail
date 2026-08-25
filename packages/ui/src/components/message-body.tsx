@@ -45,7 +45,12 @@ export function MessageBody({ message, theme, onDownloadAttachment }: MessageBod
     const bg = theme === 'dark' ? '#1a1a1a' : '#fff';
     const fg = theme === 'dark' ? '#d4d4d8' : '#3f3f46';
 
-    return '<!DOCTYPE html><html><head><meta charset="utf-8"><style>'
+    // Every link opens in a new tab: the iframe is sandboxed, so in-place
+    // navigation would be blocked anyway — <base target="_blank"> plus the
+    // allow-popups sandbox flags below is what makes links clickable at all.
+    return '<!DOCTYPE html><html><head><meta charset="utf-8">'
+      + '<base target="_blank">'
+      + '<style>'
       + 'html,body{margin:0;background:' + bg + '}'
       + 'body{font-family:system-ui,sans-serif;font-size:14px;line-height:1.6;padding:20px;color:' + fg + ';box-sizing:border-box}'
       + 'a{color:#2563eb}img{max-width:100%;height:auto}'
@@ -120,7 +125,7 @@ export function MessageBody({ message, theme, onDownloadAttachment }: MessageBod
         )}
         <iframe
           srcDoc={iframeSrc}
-          sandbox="allow-same-origin allow-scripts"
+          sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
           onLoad={handleIframeLoad}
           className="w-full border-0"
           style={{

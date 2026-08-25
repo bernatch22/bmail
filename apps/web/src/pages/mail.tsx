@@ -71,6 +71,13 @@ async function fileToOutgoingAttachment(file: File): Promise<OutgoingAttachment>
   };
 }
 
+/** Content types the browser can render by itself, worth a preview tab. */
+function isPreviewable(contentType: string): boolean {
+  return contentType.startsWith('image/')
+    || contentType === 'application/pdf'
+    || contentType.startsWith('text/');
+}
+
 /** Hand downloaded bytes to the browser as a file save. */
 function saveBlob(bytes: Uint8Array, contentType: string, filename: string): void {
   const blob = new Blob([bytes as BlobPart], { type: contentType });
@@ -79,9 +86,22 @@ function saveBlob(bytes: Uint8Array, contentType: string, filename: string): voi
   const anchor = document.createElement('a');
   anchor.href = url;
   anchor.download = filename;
+  document.body.appendChild(anchor);
   anchor.click();
+  anchor.remove();
 
-  URL.revokeObjectURL(url);
+  // Revoking synchronously kills the download in Safari before it starts;
+  // defer it long enough for the save to begin.
+  setTimeout(() => URL.revokeObjectURL(url), 30_000);
+}
+
+/** Open previewable bytes (images, PDFs, text) in a new tab. */
+function previewBlob(bytes: Uint8Array, contentType: string): void {
+  const blob = new Blob([bytes as BlobPart], { type: contentType });
+  const url = URL.createObjectURL(blob);
+
+  window.open(url, '_blank');
+  setTimeout(() => URL.revokeObjectURL(url), 30_000);
 }
 
 // ─── Page ──────────────────────────────────────────────
@@ -301,7 +321,13 @@ export function MailPage({ navigate }: MailPageProps) {
         message.uid,
         attachment.partId,
       );
-      saveBlob(downloaded.bytes, downloaded.contentType, downloaded.filename || attachment.filename);
+      // Previewable types (images, PDFs, text) open in a new tab; anything
+      // else goes straight to a file save.
+      if (isPreviewable(downloaded.contentType)) {
+        previewBlob(downloaded.bytes, downloaded.contentType);
+      } else {
+        saveBlob(downloaded.bytes, downloaded.contentType, downloaded.filename || attachment.filename);
+      }
     } catch (err: unknown) {
       console.error('Attachment download failed:', err instanceof Error ? err.message : err);
     }
