@@ -184,7 +184,7 @@ export function createMailboxRoutes(repository: MailRepository): ExpressRouter {
   //
   // These two are not in the uniform action table above: move needs a body
   // parameter (the destination folder) and delete uses the HTTP verb on the
-  // message resource itself, matching what the @bmail/sdk SDK expects.
+  // message resource itself, matching what the @bernatch22/bmail SDK expects.
 
   router.post(
     '/:folder/messages/:uid/move',

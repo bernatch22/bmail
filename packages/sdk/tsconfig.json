@@ -1,5 +1,5 @@
 {
-  // @bmail/sdk — the client SDK. It depends on @bmail/core ONLY for the wire
+  // @bernatch22/bmail — the client SDK. It depends on @bmail/core ONLY for the wire
   // types (@bmail/core/types), and imports them type-only where it can, so
   // nothing from the store or the IMAP machinery reaches a browser or phone.
   //

@@ -1,15 +1,15 @@
-# @bmail/sdk
+# @bernatch22/bmail
 
 Cliente HTTP + WebSocket del API de [BMail](https://github.com/bernatch22/bmail), el webmail
 self-hosted sobre Maddy. **Cero dependencias**: corre en el navegador, en Node, en Electron y en
 React Native — `fetch` y `WebSocket` son inyectables.
 
 ```sh
-npm i @bmail/sdk
+npm i @bernatch22/bmail
 ```
 
 ```ts
-import { BmailClient } from '@bmail/sdk'
+import { BmailClient } from '@bernatch22/bmail'
 
 const cliente = new BmailClient({ baseUrl: 'https://mail.example.com', authMode: 'bearer' })
 await cliente.login('me@example.com', 'la-contraseña-imap')

@@ -5,7 +5,7 @@
  * presentation only. The toolbar, the confirmation dialogs and the thread
  * layout live here; every action (trash, archive, flag, read toggle,
  * per-message trash, body loading, attachment download) is a callback the
- * host app implements over @bmail/sdk, together with any optimistic
+ * host app implements over @bernatch22/bmail, together with any optimistic
  * store updates.
  */
 

@@ -1,5 +1,5 @@
 /**
- * @bmail/sdk — platform-agnostic SDK for the BMail HTTP API and its
+ * @bernatch22/bmail — platform-agnostic SDK for the BMail HTTP API and its
  * realtime WebSocket channel.
  *
  * Everything environment-specific is injected: fetch, the WebSocket

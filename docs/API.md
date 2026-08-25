@@ -1,6 +1,6 @@
 # BMail API reference
 
-Three parts: the REST/WS API served by `apps/server`, the `@bmail/sdk`
+Three parts: the REST/WS API served by `apps/server`, the `@bernatch22/bmail`
 SDK, and the library surfaces (`contract`, `domain`, `db`, `engine`, `infra`,
 plus the MCP tools).
 
@@ -107,7 +107,7 @@ should re-fetch through the HTTP API rather than trusting the payload.
 
 ---
 
-## @bmail/sdk
+## @bernatch22/bmail
 
 Platform-agnostic: `fetch`, the WebSocket constructor and the base URL are
 injectable, so the same SDK runs in browsers, Node (>= 18) and React Native.
@@ -159,7 +159,7 @@ without recreating the socket.
 ### Example — web (cookie mode, same-origin)
 
 ```ts
-import { BmailClient } from '@bmail/sdk';
+import { BmailClient } from '@bernatch22/bmail';
 
 const client = new BmailClient({
   baseUrl: '',
@@ -180,7 +180,7 @@ const stop = socket.subscribe((event) => {
 ### Example — Node / native (bearer mode)
 
 ```ts
-import { BmailClient } from '@bmail/sdk';
+import { BmailClient } from '@bernatch22/bmail';
 import WebSocket from 'ws';
 
 const client = new BmailClient({

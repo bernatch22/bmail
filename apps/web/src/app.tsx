@@ -11,7 +11,7 @@ import { useNavigate, useParams } from 'react-router';
 
 import type { WsEvent } from '@bmail/core/types';
 import { slugToFolder } from '@bmail/core/logic';
-import type { BmailSocket } from '@bmail/sdk';
+import type { BmailSocket } from '@bernatch22/bmail';
 
 import { useAuth } from './auth.js';
 import { client, deriveWsUrl } from './lib/client.js';

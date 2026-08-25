@@ -7,7 +7,7 @@
  * callback instead of hardcoding it.
  */
 
-import { BmailClient } from '@bmail/sdk';
+import { BmailClient } from '@bernatch22/bmail';
 
 export const client = new BmailClient({
   baseUrl: '',

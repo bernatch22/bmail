@@ -1,5 +1,5 @@
 {
-  "name": "@bmail/sdk",
+  "name": "@bernatch22/bmail",
   "version": "0.1.0",
   "type": "module",
   "description": "Cliente HTTP + WebSocket del API de BMail. Cero dependencias: navegador, Node, Electron y React Native.",

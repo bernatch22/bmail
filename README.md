@@ -14,7 +14,7 @@ It is the extraction of the previously monolithic `bermail` webmail and
 desktop ready). See `CLAUDE.md` for the plan and its current state.
 
 The libraries are grouped by **who consumes them**, not by layer: building a
-client app means `@bmail/sdk` (plus `@bmail/react` if it is React); running the
+client app means `@bernatch22/bmail` (plus `@bmail/react` if it is React); running the
 service means `@bmail/core`; operating domains and mailboxes means
 `@bmail/admin`. One question, one answer.
 
@@ -29,7 +29,7 @@ service means `@bmail/core`; operating domains and mailboxes means
         └───┬──────────────┬───────────────┬──────────────┬──────────┘
             │              │               │              │
      ┌──────▼──────┐ ┌─────▼──────┐  ┌─────▼──────┐       │
-     │ @bmail/react│ │ @bmail/sdk │  │@bmail/admin│       │
+     │ @bmail/react│ │ @bernatch22/bmail │  │@bmail/admin│       │
      │  components │ │  HTTP + WS │  │ SES · R53  │       │
      │             │ │            │  │ Maddy/SSH  │       │
      └──────┬──────┘ └─────┬──────┘  └────────────┘       │

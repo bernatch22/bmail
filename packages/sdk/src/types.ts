@@ -1,5 +1,5 @@
 /**
- * types.ts — Public option/result shapes of the @bmail/sdk SDK.
+ * types.ts — Public option/result shapes of the @bernatch22/bmail SDK.
  *
  * The client is platform-agnostic: it never touches window, document or any
  * DOM API. Everything environment-specific (fetch, WebSocket, base URL, what

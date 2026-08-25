@@ -191,7 +191,7 @@ subject, FTS5) OK.
   WsHub implementa ChangeNotifier, auth cookie+bearer (login devuelve el token),
   SESSION_SECRET obligatorio, adjuntos en /api/send como JSON base64 (multipart
   es TODO); `tsc -b` y smoke test de arranque verdes.
-- `@bmail/sdk` (paso 6 + client de 11): BmailClient (fetch/WS/baseUrl
+- `@bernatch22/bmail` (paso 6 + client de 11): BmailClient (fetch/WS/baseUrl
   inyectables, authMode cookie|bearer, onUnauthorized en vez de navegar) +
   BmailSocket (backoff exponencial, guard isWsEvent, token bearer por ?token=)
   + adjuntos (getAttachmentUrl/downloadAttachment, upload base64 en send);
@@ -200,7 +200,7 @@ subject, FTS5) OK.
 - admin+cli: hechos y commiteados (5b3b020); feedbackHost corregido,
   esquema lean en dns-records.ts, ~/.bmailctl.json implementado.
 - `@bmail/react` (paso 7 + chips de 11): componentes presentacionales puros —
-  cero fetch, cero @bmail/sdk; datos y acciones entran por props/callbacks.
+  cero fetch, cero @bernatch22/bmail; datos y acciones entran por props/callbacks.
   mail-display.tsx partido en mail-display/thread-message/single-message/
   message-body/attachment-chips + lib/{quotes,darkify,format}; las acciones
   IMAP y los updates optimistas subieron a apps/web. AttachmentChips en el

@@ -3,7 +3,7 @@
  *
  * Reusable React components for BMail clients. Presentation only: data and
  * actions travel through props/callbacks, so the same components work over
- * @bmail/sdk, a mock, or any other transport the host app chooses.
+ * @bernatch22/bmail, a mock, or any other transport the host app chooses.
  */
 
 // ─── Mail components ───────────────────────────────────

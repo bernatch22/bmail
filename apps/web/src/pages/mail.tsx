@@ -2,7 +2,7 @@
  * mail.tsx — The mail page: wires @bmail/react components to the SDK.
  *
  * This is where the SPA earns the word "thin": every callback the UI
- * components expose is implemented here over @bmail/sdk, with the
+ * components expose is implemented here over @bernatch22/bmail, with the
  * optimistic store updates that used to live inside the components.
  * Reply/forward semantics come from @bmail/core/logic, not inline regexes.
  */
@@ -17,7 +17,7 @@ import {
   folderToSlug,
   resolveReplyRecipients,
 } from '@bmail/core/logic';
-import type { OutgoingAttachment } from '@bmail/sdk';
+import type { OutgoingAttachment } from '@bernatch22/bmail';
 import {
   ComposePane,
   MailDisplay,
