@@ -205,3 +205,16 @@ subject, FTS5) OK.
   claude/codex/antigravity/cursor/windsurf/gemini, escribe la entrada "bmail"
   (node + path absoluto a dist/main.js), idempotente con backup .bak,
   --list/--remove/--with-env; sin args el bin sigue siendo el server stdio.
+
+## Cutover a producción (sin downtime de IMAP/SMTP)
+
+El correo vive en Maddy (imapsql + /var/lib/maddy/messages) y NO se toca.
+La SQLite local es caché reconstruible. Migrar = cambiar la app, no los datos.
+
+1. Deploy apps/server en bc-mail en :3002 (SESSION_SECRET fijo, BMAIL_ORGS_FILE),
+   conviviendo con el bermail viejo en :3001.
+2. Build de apps/web a /var/www/bmail (separado de /var/www/bermail).
+3. Probar contra producción real apuntando a :3002 (login, leer, enviar, adjuntos).
+4. Switch: proxy_pass + root de nginx al nuevo, reload. Segundos.
+5. Rollback = revertir nginx; el viejo queda parado intacto (pm2 stop bermail).
+Efecto visible único: relogin de usuarios del webmail (sesiones en RAM del viejo).
