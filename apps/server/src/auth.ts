@@ -62,7 +62,32 @@ export function extractTokenFromUpgrade(req: IncomingMessage): string | undefine
     return authorization.slice('Bearer '.length).trim();
   }
 
+  // Browser and React Native WebSocket constructors cannot set headers on the
+  // handshake, so bearer clients pass the JWT as a `?token=` query parameter
+  // instead (the SDK does this automatically in bearer mode).
+  const queryToken = extractQueryToken(req.url);
+  if (queryToken) {
+    return queryToken;
+  }
+
   return parseCookieHeader(req.headers.cookie)[SESSION_COOKIE];
+}
+
+/**
+ * Read the `token` query parameter from an upgrade request URL, if present.
+ * The URL is relative here, so a placeholder base is used just to parse it.
+ */
+function extractQueryToken(url: string | undefined): string | undefined {
+  if (!url || !url.includes('token=')) {
+    return undefined;
+  }
+
+  try {
+    const parsed = new URL(url, 'http://placeholder');
+    return parsed.searchParams.get('token') ?? undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function parseCookieHeader(header: string | undefined): Record<string, string> {

@@ -180,5 +180,53 @@ export function createMailboxRoutes(repository: MailRepository): ExpressRouter {
     );
   }
 
+  // ─── Move and delete ───────────────────────────────────
+  //
+  // These two are not in the uniform action table above: move needs a body
+  // parameter (the destination folder) and delete uses the HTTP verb on the
+  // message resource itself, matching what the @bmail/client SDK expects.
+
+  router.post(
+    '/:folder/messages/:uid/move',
+    async (req: AuthedRequest, res: Response) => {
+      try {
+        const { folder, uid } = parseMessagePath(req);
+        if (isNaN(uid)) {
+          res.status(400).json({ error: 'Invalid UID' });
+          return;
+        }
+
+        const destination = (req.body as { destination?: string })?.destination;
+        if (!destination || typeof destination !== 'string') {
+          res.status(400).json({ error: 'Missing destination folder' });
+          return;
+        }
+
+        await req.trio!.mail.move(folder, uid, destination);
+        res.json({ status: 'ok' });
+      } catch (error: unknown) {
+        respondWithError(res, error, 'Failed to move message');
+      }
+    },
+  );
+
+  router.delete(
+    '/:folder/messages/:uid',
+    async (req: AuthedRequest, res: Response) => {
+      try {
+        const { folder, uid } = parseMessagePath(req);
+        if (isNaN(uid)) {
+          res.status(400).json({ error: 'Invalid UID' });
+          return;
+        }
+
+        req.trio!.mail.delete(folder, uid);
+        res.json({ status: 'ok' });
+      } catch (error: unknown) {
+        respondWithError(res, error, 'Failed to delete message');
+      }
+    },
+  );
+
   return router;
 }
