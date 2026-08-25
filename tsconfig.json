@@ -13,6 +13,7 @@
     { "path": "packages/engine" },
     { "path": "packages/infra" },
     { "path": "apps/bmailctl" },
-    { "path": "apps/server" }
+    { "path": "apps/server" },
+    { "path": "apps/mcp" }
   ]
 }

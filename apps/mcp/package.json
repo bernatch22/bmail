@@ -1,0 +1,27 @@
+{
+  "name": "@bmail/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "bmail MCP server: admin (Maddy/SES/Route 53) and mail (IMAP/SMTP) tools over stdio",
+  "type": "module",
+  "bin": {
+    "bmail-mcp": "./dist/main.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/main.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@bmail/contract": "*",
+    "@bmail/engine": "*",
+    "@bmail/infra": "*",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}

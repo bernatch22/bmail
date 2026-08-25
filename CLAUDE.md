@@ -96,7 +96,7 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
           (getAttachmentUrl + downloadAttachment; upload = attachments base64
           en send())
         - ui/web: chips de adjuntos en MessageView + adjuntar en Composer
-- [ ] 12. apps/mcp (nuevo, pedido 2026-08-25): servidor MCP "bmail" para controlar
+- [x] 12. apps/mcp (nuevo, pedido 2026-08-25): servidor MCP "bmail" para controlar
         todo desde Claude. Stdio, @modelcontextprotocol/sdk. Tools:
         - admin (sobre packages/infra): account_create/list/passwd/delete,
           org_add/list/verify, dns_records (genera los 3-4 records del cliente)
@@ -177,3 +177,9 @@ subject, FTS5) OK.
   (solo header/cookie) y faltan las rutas move/DELETE que el SDK ya expone.
 - infra+bmailctl: hechos y commiteados (5b3b020); feedbackHost corregido,
   esquema lean en dns-records.ts, ~/.bmailctl.json implementado.
+- `apps/mcp` (paso 12): servidor MCP "bmail" por stdio — 13 tools: admin sobre
+  infra (account_create/list/passwd/delete, org_list/verify/add, dns_records
+  lean|full; delete y org_add exigen confirm:true) + correo sobre engine por
+  IMAP/SMTP directo sin DB local (mail_login/list/read/attachment/send;
+  conexión IMAP por llamada, adjuntos a disco, console→stderr para no romper
+  el protocolo). `tsc -b` y smoke test initialize+tools/list verdes.
