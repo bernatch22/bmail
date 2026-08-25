@@ -78,7 +78,7 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
          'feedback-smtp.us-east-1.amazonaws.com' → debe ser '.amazonses.com' (BUG,
          no resuelve). Config sets + eventos SNS por dominio (deliverability nivel 1)
        - route53.ts: hostedZoneId, rrUpsert
-       - maddy.ts: ssh gcloud, creds/imap-acct, local_domains, display-names
+       - maddy.ts: ssh directo con keys (alias bc-mail), creds/imap-acct, local_domains, display-names
        - dns-records.ts: generar los records del cliente (esquema 3-4 records:
          MX + SPF include:spf.bmail… + 1 CNAME BYODKIM + DMARC CNAME;
          DMARC SIN aspf=s — con MAIL FROM de SES por defecto, aspf=s rompe DMARC)
@@ -218,3 +218,6 @@ La SQLite local es caché reconstruible. Migrar = cambiar la app, no los datos.
 4. Switch: proxy_pass + root de nginx al nuevo, reload. Segundos.
 5. Rollback = revertir nginx; el viejo queda parado intacto (pm2 stop bermail).
 Efecto visible único: relogin de usuarios del webmail (sesiones en RAM del viejo).
+- 2026-08-25: infra ya NO usa gcloud — ssh directo con keys (alias `bc-mail` en
+  ~/.ssh/config → 35.223.254.55, key google_compute_engine). Override:
+  BMAIL_SSH_TARGET. Campos zone/box/project eliminados de InfraConfig.

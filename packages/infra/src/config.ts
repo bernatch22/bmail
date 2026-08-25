@@ -16,13 +16,10 @@
 // ── the shape ─────────────────────────────────────────────────────────────────
 
 export interface InfraConfig {
-  // GCP: where the Maddy box lives.
-  zone: string;
-  box: string;
-
-  // Pin the project: relying on the gcloud default breaks (hangs) whenever a
-  // re-login switches it to a project where the Compute API is disabled.
-  project: string;
+  // SSH target for the Maddy box — an alias resolved by ~/.ssh/config
+  // (Host bc-mail → IP + user + IdentityFile), or a full user@host string.
+  // Plain OpenSSH with keys, shipway-style: no gcloud, no cloud CLI at all.
+  sshTarget: string;
 
   // What mail clients connect to (IMAP 993 / SMTP 465).
   mailHost: string;
@@ -66,9 +63,7 @@ export function loadConfig(
     overrides.sesRegion || env.BMAIL_SES_REGION || 'us-east-1';
 
   const defaults: InfraConfig = {
-    zone: env.BMAIL_ZONE || 'us-central1-a',
-    box: env.BMAIL_BOX || 'bc-mail',
-    project: env.BMAIL_PROJECT || 'hiding-place-447317-c6',
+    sshTarget: env.BMAIL_SSH_TARGET || 'bc-mail',
     mailHost: env.BMAIL_MAIL_HOST || 'mail.bernardocastro.dev',
     mailIp: env.BMAIL_MAIL_IP || '35.223.254.55',
 

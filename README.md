@@ -95,7 +95,7 @@ Run the webmail in dev (proxies `/api` and `/ws` to `127.0.0.1:3001`):
 npm run dev -w @bmail/web
 ```
 
-Admin CLI (drives Maddy over `gcloud ssh` and SES/Route 53 over local `aws`
+Admin CLI (drives Maddy over plain SSH (keys, `~/.ssh/config` alias `bc-mail`) and SES/Route 53 over local `aws`
 credentials; config via `BMAIL_*` env vars or `~/.bmailctl.json`):
 
 ```sh

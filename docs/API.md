@@ -280,7 +280,7 @@ The core, extracted from bermail. No HTTP anywhere — the server wires it.
 ### @bmail/infra
 
 Platform ops as a library (used by `bmailctl`, the MCP server, and the future
-`bmaild-admin`). Drives Maddy over `gcloud ssh` and AWS over the local CLIs.
+`bmaild-admin`). Drives Maddy over plain SSH with keys (`~/.ssh/config` alias `bc-mail`, override `BMAIL_SSH_TARGET`) and AWS over the local CLIs.
 
 | Module | Exports |
 |---|---|
@@ -310,7 +310,7 @@ DNS record schemes:
 ### MCP tools (apps/mcp)
 
 Stdio MCP server `bmail` — 13 tools. Admin tools sit on `@bmail/infra` (local
-`gcloud`/`aws` sessions); mail tools speak IMAP/SMTP directly, one fresh
+SSH keys and local `aws` session); mail tools speak IMAP/SMTP directly, one fresh
 connection per call, no local DB. Credentials via `BMAIL_MCP_EMAIL` /
 `BMAIL_MCP_PASSWORD` or the `mail_login` tool (in-memory override).
 

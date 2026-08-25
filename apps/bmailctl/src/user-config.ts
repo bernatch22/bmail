@@ -3,7 +3,7 @@
  *
  * The v0 README promised "overridable via ~/.bmailctl.json" but the code
  * never read the file; this implements it. The file, when present, holds a
- * flat JSON object whose keys are InfraConfig fields (zone, box, project,
+ * flat JSON object whose keys are InfraConfig fields (sshTarget,
  * mailHost, mailIp, sesRegion, feedbackHost, …). Precedence stays:
  * defaults < BMAIL_* env < ~/.bmailctl.json (explicit beats ambient).
  */

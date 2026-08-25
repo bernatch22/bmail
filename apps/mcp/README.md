@@ -67,7 +67,7 @@ env for the life of the server process).
 
 ## Notes
 
-- Admin tools use your local `gcloud` and `aws` sessions, exactly like
+- Admin tools use plain SSH with keys (alias `bc-mail`) and your local `aws` session, exactly like
   `bmailctl` — same defaults, same `BMAIL_*` env overrides, same
   `~/.bmailctl.json`.
 - Mail tools connect per call: the server opens a fresh IMAP connection for

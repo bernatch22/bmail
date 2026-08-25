@@ -1,7 +1,7 @@
 /**
  * shell.ts — the one place @bmail/infra touches child processes.
  *
- * Everything the package does ultimately runs a local binary (gcloud, aws).
+ * Everything the package does ultimately runs a local binary (ssh, aws).
  * This module wraps execFile with the buffer sizes and quoting helpers the
  * rest of the package needs, so no other module imports child_process.
  */

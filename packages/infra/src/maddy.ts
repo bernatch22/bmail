@@ -1,7 +1,7 @@
 /**
  * maddy.ts — mailbox operations on the Maddy server (bc-mail).
  *
- * Everything runs over gcloud ssh (see ssh.ts) against the maddy CLI on the
+ * Everything runs over plain SSH (see ssh.ts) against the maddy CLI on the
  * box: creds for authentication, imap-acct for the actual mailbox, plus the
  * display-names JSON file and the local_domains line in maddy.conf.
  *
