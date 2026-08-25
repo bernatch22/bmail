@@ -44,12 +44,12 @@ contract ← domain ← (client | db | engine | infra) ← ui ← apps
 
 Cada paso deja el sistema corriendo. Marcar [x] al completar.
 
-- [ ] 0. Scaffold: package.json workspaces, tsconfig refs, este archivo
-- [ ] 1. `contract`: unificar los tipos triplicados
+- [x] 0. Scaffold: package.json workspaces, tsconfig refs, este archivo
+- [x] 1. `contract`: unificar los tipos triplicados
        (bermail/packages/db/src/repository.ts + core/src/imap.ts + core/src/types.ts
         + web/src/types.ts → MessageEnvelope, FullMessage, MailboxInfo,
         PaginatedMessages, WsEvent, EmailInsight, AuthUser, Org)
-- [ ] 2. `db`: migrar @shmail/db → @bmail/db. Añadir `exports` reales, conexión
+- [x] 2. `db`: migrar @shmail/db → @bmail/db. Añadir `exports` reales, conexión
        inyectable (hoy singleton getDb()), tipos importados de contract.
        DDL: unificar (hoy hay doble fuente: SQL embebido + drizzle schema)
 - [ ] 3. `domain`: extraer lógica pura:
@@ -123,3 +123,27 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
 - IMAP/SMTP cliente: siempre mail.bernardocastro.dev :993/:465
 - DNS: SIEMPRE Route 53 (~/.aws). Nunca GCP.
 - SES verifica por DOMINIO: buzón nuevo en dominio verificado = cero DNS
+
+## Estado 2026-08-25
+
+Pasos 0–2 hechos: repo git inicializado (identidad me@bernardocastro.dev),
+workspaces npm + `tsc -b` con references (tsconfig.base.json compartido),
+`npm install` y build verdes, smoke test runtime de db (upsert, threading por
+subject, FTS5) OK.
+
+- `@bmail/contract`: src/{mail,insight,ws,auth}.ts + index. Incluye
+  AttachmentInfo (paso 11) y el guard isWsEvent (único helper runtime).
+  Decisión: `MessageEnvelope.date` es `string | null` (forma wire de db/web;
+  el `Date` de core/imap.ts queda como detalle interno del engine). Se soltó
+  el `unread?` legacy de MailboxInfo de web.
+- `@bmail/db`: exports reales (`.`, `./schema`, `./repository`).
+  `createDatabase(path)` → handle BmailDatabase inyectable; singleton muerto.
+  `openDefaultDatabase()` resuelve BMAIL_DB → SHMAIL_DB (legacy) →
+  ~/.bermail/shmail.db para seguir leyendo los datos de producción.
+  Repository ahora es clase `MailRepository(database)`; lógica de queries,
+  FTS5+triggers y threading intactos. DDL a mano sigue siendo la única fuente
+  (drizzle schema solo tipa queries; duplicación anotada en comentarios).
+  Columna `provider` legacy conservada a propósito.
+- Desviación menor detectada (no tocada): packages/ui/src ya contenía copias
+  sueltas de {index,repository,schema}.ts de db — parecen restos de un intento
+  previo; limpiar en el paso 7.
