@@ -70,9 +70,9 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
        Fijar SESSION_SECRET requerido de env (hoy: random por arranque).
 - [x] 6. `client`: extraer web/src/api.ts + ws.ts → SDK con fetch/WS/baseUrl
        inyectables; onUnauthorized callback (hoy: window.location.href)
-- [ ] 7. `ui`: componentes de web/src/components → @bmail/ui
+- [x] 7. `ui`: componentes de web/src/components → @bmail/ui
        (mail-display.tsx tiene 638 líneas: partir render/acciones/sanitizado)
-- [ ] 8. `apps/web`: SPA sobre ui+client. Purgar .js stale de web/src.
+- [x] 8. `apps/web`: SPA sobre ui+client. Purgar .js stale de web/src.
 - [x] 9. `infra`: descomponer bmailctl.mjs:
        - ses.ts: identidades + MAIL FROM. FIX: feedbackHost es
          'feedback-smtp.us-east-1.amazonaws.com' → debe ser '.amazonses.com' (BUG,
@@ -95,7 +95,7 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
         - [x] contract: tipos AttachmentInfo; client: métodos download/upload
           (getAttachmentUrl + downloadAttachment; upload = attachments base64
           en send())
-        - ui/web: chips de adjuntos en MessageView + adjuntar en Composer
+        - [x] ui/web: chips de adjuntos en MessageView + adjuntar en Composer
 - [x] 12. apps/mcp (nuevo, pedido 2026-08-25): servidor MCP "bmail" para controlar
         todo desde Claude. Stdio, @modelcontextprotocol/sdk. Tools:
         - admin (sobre packages/infra): account_create/list/passwd/delete,
@@ -177,6 +177,24 @@ subject, FTS5) OK.
   (solo header/cookie) y faltan las rutas move/DELETE que el SDK ya expone.
 - infra+bmailctl: hechos y commiteados (5b3b020); feedbackHost corregido,
   esquema lean en dns-records.ts, ~/.bmailctl.json implementado.
+- `@bmail/ui` (paso 7 + chips de 11): componentes presentacionales puros —
+  cero fetch, cero @bmail/client; datos y acciones entran por props/callbacks.
+  mail-display.tsx partido en mail-display/thread-message/single-message/
+  message-body/attachment-chips + lib/{quotes,darkify,format}; las acciones
+  IMAP y los updates optimistas subieron a apps/web. AttachmentChips en el
+  cuerpo del mensaje (onDownloadAttachment) y adjuntar archivos en ComposePane
+  (File[] → callback; el base64 lo hace la app). El quote/forward HTML y la
+  detección "es mío" ahora vienen de @bmail/domain (se borraron las copias
+  inline). tsconfig con module ESNext + Bundler + jsx (lo consume Vite).
+- `apps/web` (paso 8 + web de 11): SPA fina — router/auth/store + pages/mail.tsx
+  que cablea ui↔client. use-auth sobre BmailClient en modo cookie
+  (onUnauthorized navega a /login); WS vía client.connect(wsUrl same-origin);
+  reply resolution y folder slugs desde @bmail/domain (copias de mail.tsx/
+  router.tsx eliminadas). Descarga de adjuntos: client.downloadAttachment →
+  Blob → <a download>; envío: File → base64 → send(). Vite con proxy
+  /api y /ws a 127.0.0.1:3001. `tsc -b` raíz y `vite build` verdes. Los .js
+  stale de bermail no se copiaron (solo .tsx/.ts). Restos de db en ui/src ya
+  no existían al empezar el paso.
 - `apps/mcp` (paso 12): servidor MCP "bmail" por stdio — 13 tools: admin sobre
   infra (account_create/list/passwd/delete, org_list/verify/add, dns_records
   lean|full; delete y org_add exigen confirm:true) + correo sobre engine por

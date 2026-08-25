@@ -12,6 +12,8 @@
     { "path": "packages/client" },
     { "path": "packages/engine" },
     { "path": "packages/infra" },
+    { "path": "packages/ui" },
+    { "path": "apps/web" },
     { "path": "apps/bmailctl" },
     { "path": "apps/server" },
     { "path": "apps/mcp" }

@@ -20,3 +20,6 @@ dist/
 
 # Logs
 *.log
+
+# apps/web type-check output (emitDeclarationOnly)
+apps/web/dist-types/

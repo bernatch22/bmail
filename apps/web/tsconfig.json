@@ -1,0 +1,23 @@
+{
+  // @bmail/web — Vite SPA.
+  //
+  // tsc -b only type-checks (declarations go to dist-types and are unused);
+  // the real build artifact comes from `vite build`. Module settings follow
+  // the bundler, like @bmail/ui.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist-types",
+    "emitDeclarationOnly": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../../packages/contract" },
+    { "path": "../../packages/domain" },
+    { "path": "../../packages/client" },
+    { "path": "../../packages/ui" }
+  ]
+}
