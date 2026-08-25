@@ -1,0 +1,42 @@
+{
+  "name": "@bmail/domain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pure mail logic for BMail: threading, reply resolution, address parsing, folder slugs. Zero I/O.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./threading": {
+      "types": "./dist/threading.d.ts",
+      "import": "./dist/threading.js"
+    },
+    "./reply": {
+      "types": "./dist/reply.d.ts",
+      "import": "./dist/reply.js"
+    },
+    "./addresses": {
+      "types": "./dist/addresses.d.ts",
+      "import": "./dist/addresses.js"
+    },
+    "./folders": {
+      "types": "./dist/folders.d.ts",
+      "import": "./dist/folders.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "tsc -b && node --test"
+  },
+  "dependencies": {
+    "@bmail/contract": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}

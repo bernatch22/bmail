@@ -52,7 +52,7 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
 - [x] 2. `db`: migrar @shmail/db → @bmail/db. Añadir `exports` reales, conexión
        inyectable (hoy singleton getDb()), tipos importados de contract.
        DDL: unificar (hoy hay doble fuente: SQL embebido + drizzle schema)
-- [ ] 3. `domain`: extraer lógica pura:
+- [x] 3. `domain`: extraer lógica pura:
        - threading/normalizeSubject (de db/repository.ts)
        - reply/counterparty resolution (de web/src/mail.tsx:110+)
        - folder slug mapping (de web/src/router.tsx)
@@ -147,3 +147,9 @@ subject, FTS5) OK.
 - Desviación menor detectada (no tocada): packages/ui/src ya contenía copias
   sueltas de {index,repository,schema}.ts de db — parecen restos de un intento
   previo; limpiar en el paso 7.
+- `@bmail/domain` (paso 3): threading (normalizeSubject + computeThreadId puro
+  con ThreadLookup inyectado), reply (resolveReplyRecipients con el caso
+  self-addressed, quoted/forward HTML), addresses ("Name <addr>"), folders
+  (slugs Maddy). 26 tests node:test verdes. Pendiente: db aún tiene su copia
+  privada de normalizeSubject/computeThreadId — que importe de domain cuando
+  se vuelva a tocar db.
