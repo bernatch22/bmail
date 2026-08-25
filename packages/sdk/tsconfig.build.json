@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist-tsc",
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+    "composite": false,
+    "baseUrl": ".",
+    "paths": {
+      "@bmail/core/types": [
+        "../core/dist/types/index.d.ts"
+      ]
+    }
+  }
+}

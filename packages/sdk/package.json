@@ -1,9 +1,8 @@
 {
   "name": "@bmail/sdk",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
-  "description": "Platform-agnostic HTTP+WS SDK for the BMail API. fetch, WebSocket and baseUrl are injectable; runs on browsers, Node and React Native.",
+  "description": "Cliente HTTP + WebSocket del API de BMail. Cero dependencias: navegador, Node, Electron y React Native.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -11,16 +10,40 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
-    "build": "tsc -b",
-    "test": "tsc -b && node --test"
-  },
-  "dependencies": {
-    "@bmail/core": "*"
+    "build": "tsc -p tsconfig.build.json && node build.mjs",
+    "test": "npm run build && node --test",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
+    "@bmail/core": "*",
     "typescript": "^5.5.0"
-  }
+  },
+  "license": "MIT",
+  "author": "Bernardo Castro <me@bernardocastro.dev>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bernatch22/bmail.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://github.com/bernatch22/bmail/tree/main/packages/sdk#readme",
+  "bugs": {
+    "url": "https://github.com/bernatch22/bmail/issues"
+  },
+  "keywords": [
+    "bmail",
+    "email",
+    "imap",
+    "webmail",
+    "sdk",
+    "client",
+    "websocket"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false
 }
