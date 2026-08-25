@@ -1,0 +1,12 @@
+{
+  // tsconfig.json — root solution file for `tsc -b`.
+  //
+  // It compiles nothing itself ("files": []); it only lists the packages to
+  // build, in any order — TypeScript resolves the dependency graph from each
+  // package's own references. Add new packages here as the migration advances.
+  "files": [],
+  "references": [
+    { "path": "packages/contract" },
+    { "path": "packages/db" }
+  ]
+}

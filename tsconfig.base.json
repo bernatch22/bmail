@@ -1,0 +1,23 @@
+{
+  // tsconfig.base.json — shared compiler options for every package in the monorepo.
+  //
+  // Each package extends this file and only sets what is package-specific
+  // (rootDir, outDir, references). Options here are chosen for composite
+  // project builds: `tsc -b` at the root builds everything in dependency order.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Composite is what makes project references work: it forces declaration
+    // output and lets dependent packages type-check against emitted .d.ts.
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  }
+}
