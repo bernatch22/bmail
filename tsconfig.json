@@ -9,6 +9,8 @@
     { "path": "packages/contract" },
     { "path": "packages/domain" },
     { "path": "packages/db" },
-    { "path": "packages/engine" }
+    { "path": "packages/engine" },
+    { "path": "packages/infra" },
+    { "path": "apps/bmailctl" }
   ]
 }
