@@ -1,0 +1,26 @@
+{
+  "name": "@bmail/client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Platform-agnostic HTTP+WS SDK for the BMail API. fetch, WebSocket and baseUrl are injectable; runs on browsers, Node and React Native.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "tsc -b && node --test"
+  },
+  "dependencies": {
+    "@bmail/contract": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}

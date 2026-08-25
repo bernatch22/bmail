@@ -68,7 +68,7 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
 - [x] 5. `apps/server`: server.ts + route-*.ts + ws-hub.ts + middleware-auth.ts,
        rutas finas sobre engine. Añadir auth bearer junto a la cookie.
        Fijar SESSION_SECRET requerido de env (hoy: random por arranque).
-- [ ] 6. `client`: extraer web/src/api.ts + ws.ts → SDK con fetch/WS/baseUrl
+- [x] 6. `client`: extraer web/src/api.ts + ws.ts → SDK con fetch/WS/baseUrl
        inyectables; onUnauthorized callback (hoy: window.location.href)
 - [ ] 7. `ui`: componentes de web/src/components → @bmail/ui
        (mail-display.tsx tiene 638 líneas: partir render/acciones/sanitizado)
@@ -92,7 +92,9 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
         - [x] server: GET /api/mailboxes/:folder/messages/:uid/attachments/:partId
           (stream, Content-Disposition attachment)
         - [x] engine/SmtpSender: adjuntos en envío (nodemailer attachments)
-        - contract: tipos AttachmentInfo; client: métodos download/upload
+        - [x] contract: tipos AttachmentInfo; client: métodos download/upload
+          (getAttachmentUrl + downloadAttachment; upload = attachments base64
+          en send())
         - ui/web: chips de adjuntos en MessageView + adjuntar en Composer
 - [ ] 12. apps/mcp (nuevo, pedido 2026-08-25): servidor MCP "bmail" para controlar
         todo desde Claude. Stdio, @modelcontextprotocol/sdk. Tools:
@@ -167,5 +169,11 @@ subject, FTS5) OK.
   WsHub implementa ChangeNotifier, auth cookie+bearer (login devuelve el token),
   SESSION_SECRET obligatorio, adjuntos en /api/send como JSON base64 (multipart
   es TODO); `tsc -b` y smoke test de arranque verdes.
+- `@bmail/client` (paso 6 + client de 11): BmailClient (fetch/WS/baseUrl
+  inyectables, authMode cookie|bearer, onUnauthorized en vez de navegar) +
+  BmailSocket (backoff exponencial, guard isWsEvent, token bearer por ?token=)
+  + adjuntos (getAttachmentUrl/downloadAttachment, upload base64 en send);
+  20 tests node:test verdes. OJO: el upgrade WS del server aún no lee ?token=
+  (solo header/cookie) y faltan las rutas move/DELETE que el SDK ya expone.
 - infra+bmailctl: hechos y commiteados (5b3b020); feedbackHost corregido,
   esquema lean en dns-records.ts, ~/.bmailctl.json implementado.
