@@ -173,7 +173,7 @@ subject, FTS5) OK.
   inyectables, authMode cookie|bearer, onUnauthorized en vez de navegar) +
   BmailSocket (backoff exponencial, guard isWsEvent, token bearer por ?token=)
   + adjuntos (getAttachmentUrl/downloadAttachment, upload base64 en send);
-  20 tests node:test verdes. OJO: el upgrade WS del server aún no lee ?token=
+  20 tests node:test verdes. (resuelto: el upgrade WS del server ya lee ?token=, commit 6cb0e5f)
   (solo header/cookie) y faltan las rutas move/DELETE que el SDK ya expone.
 - infra+bmailctl: hechos y commiteados (5b3b020); feedbackHost corregido,
   esquema lean en dns-records.ts, ~/.bmailctl.json implementado.
