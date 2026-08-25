@@ -207,13 +207,18 @@ export class MailRepository {
     }
 
     // Dynamic IN (...) list → raw SQL (Drizzle cannot bind a variable list here).
+    //
+    // account_id is NOT optional here. Thread ids are Message-Ids, and two
+    // accounts in the same database share them constantly — one mails the
+    // other, or both sit on the same CC'd thread. Without this filter the
+    // list of account A quietly grows rows belonging to account B.
     const placeholders = threadIds.map(() => '?').join(',');
     const sentRows = this.raw.prepare(
       `SELECT uid, subject, from_address, date, seen, has_attachments, preview, thread_id, ai_insight
        FROM messages
-       WHERE folder_id != ? AND thread_id IN (${placeholders})
+       WHERE account_id = ? AND folder_id != ? AND thread_id IN (${placeholders})
        ORDER BY date ASC`
-    ).all(folderId, ...threadIds) as any[];
+    ).all(accountId, folderId, ...threadIds) as any[];
 
     const sentMessages: MessageEnvelope[] = sentRows.map((row: any) => ({
       uid: row.uid,

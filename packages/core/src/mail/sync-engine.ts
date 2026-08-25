@@ -259,7 +259,10 @@ export class SyncEngine {
           fresh = await this.imap.fetchSince(folder.path, highestUid);
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : String(err);
-          console.error(`  ✗ fetchSince ${folder.path}: ${message}`);
+          const detail = describeImapError(err);
+          console.error(
+            `  ✗ fetchSince ${folder.path} [${this.accountEmail}]: ${message}${detail}`,
+          );
           continue;
         }
         if (fresh.length === 0) {
@@ -310,8 +313,12 @@ export class SyncEngine {
         this.notifyChange({ mailboxes, newMessages });
       }
     } catch (err: unknown) {
+      // Say WHOSE sync failed and what the server actually answered. With
+      // several accounts ticking every 15s, a bare "Command failed" names
+      // neither the mailbox nor the IMAP response, and is unactionable.
       const message = err instanceof Error ? err.message : String(err);
-      console.error(`  ✗ Incremental sync failed: ${message}`);
+      const detail = describeImapError(err);
+      console.error(`  ✗ Incremental sync failed [${this.accountEmail}]: ${message}${detail}`);
     } finally {
       this.syncing = false;
     }
@@ -440,4 +447,31 @@ export class SyncEngine {
     }
     console.log(`  ✓ AI processed ${processed}/${unprocessed.length} emails`);
   }
+}
+
+// ─── Error detail ──────────────────────────────────────
+
+/**
+ * imapflow throws Error("Command failed") and hides the interesting part in
+ * non-standard fields. Pull them out so a log line is worth reading.
+ */
+function describeImapError(err: unknown): string {
+  if (!err || typeof err !== 'object') {
+    return '';
+  }
+
+  const candidate = err as { responseText?: string; serverResponseCode?: string; command?: string };
+  const parts: string[] = [];
+
+  if (candidate.command) {
+    parts.push(`command=${candidate.command}`);
+  }
+  if (candidate.serverResponseCode) {
+    parts.push(`code=${candidate.serverResponseCode}`);
+  }
+  if (candidate.responseText) {
+    parts.push(`response=${candidate.responseText}`);
+  }
+
+  return parts.length > 0 ? ` (${parts.join(' ')})` : '';
 }
