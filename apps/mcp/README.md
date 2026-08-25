@@ -4,9 +4,29 @@ Control the whole mail platform from Claude over stdio: platform
 administration (Maddy mailboxes, SES organizations, DNS record sets) and a
 live mailbox (list, read, download attachments, send) — no local database.
 
-## Install into Claude Code
+## Install
 
-Build first (`npm run build` at the repo root), then:
+Build first (`npm run build` at the repo root), then let the server wire
+itself into every assistant found on this machine (Claude Code, Claude
+Desktop-style hosts, Codex, Cursor, Windsurf, Antigravity, Gemini CLI):
+
+```sh
+node apps/mcp/dist/main.js install
+```
+
+Variants:
+
+```sh
+node apps/mcp/dist/main.js install --list      # show what is detected, change nothing
+node apps/mcp/dist/main.js install claude      # only the platforms you name
+node apps/mcp/dist/main.js install --remove    # take the bmail entry back out
+node apps/mcp/dist/main.js install --with-env  # also copy BMAIL_MCP_EMAIL/PASSWORD into the config
+```
+
+Each config file is backed up to `<file>.bak` before the first write, and
+re-running repairs the existing `bmail` entry instead of adding a second one.
+
+Manual fallback for Claude Code:
 
 ```sh
 claude mcp add bmail -- node /Users/berna/bmail/apps/mcp/dist/main.js

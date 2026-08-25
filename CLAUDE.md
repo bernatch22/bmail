@@ -183,3 +183,7 @@ subject, FTS5) OK.
   IMAP/SMTP directo sin DB local (mail_login/list/read/attachment/send;
   conexión IMAP por llamada, adjuntos a disco, console→stderr para no romper
   el protocolo). `tsc -b` y smoke test initialize+tools/list verdes.
+  Self-installer `bmail-mcp install` (portado de ~/pinecall/mcp): detecta
+  claude/codex/antigravity/cursor/windsurf/gemini, escribe la entrada "bmail"
+  (node + path absoluto a dist/main.js), idempotente con backup .bak,
+  --list/--remove/--with-env; sin args el bin sigue siendo el server stdio.
