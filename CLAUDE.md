@@ -73,7 +73,7 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
 - [ ] 7. `ui`: componentes de web/src/components → @bmail/ui
        (mail-display.tsx tiene 638 líneas: partir render/acciones/sanitizado)
 - [ ] 8. `apps/web`: SPA sobre ui+client. Purgar .js stale de web/src.
-- [ ] 9. `infra`: descomponer bmailctl.mjs:
+- [x] 9. `infra`: descomponer bmailctl.mjs:
        - ses.ts: identidades + MAIL FROM. FIX: feedbackHost es
          'feedback-smtp.us-east-1.amazonaws.com' → debe ser '.amazonses.com' (BUG,
          no resuelve). Config sets + eventos SNS por dominio (deliverability nivel 1)
@@ -82,7 +82,7 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
        - dns-records.ts: generar los records del cliente (esquema 3-4 records:
          MX + SPF include:spf.bmail… + 1 CNAME BYODKIM + DMARC CNAME;
          DMARC SIN aspf=s — con MAIL FROM de SES por defecto, aspf=s rompe DMARC)
-- [ ] 10. `apps/bmailctl`: CLI sobre infra. Mantener compat de comandos.
+- [x] 10. `apps/bmailctl`: CLI sobre infra. Mantener compat de comandos.
         Quitar flag muerta --print-password; ~/.bmailctl.json documentado pero
         nunca leído (implementarlo o quitarlo del texto)
 - [ ] 11. ATTACHMENTS (nuevo, pedido 2026-08-25):
@@ -163,3 +163,5 @@ subject, FTS5) OK.
   best-effort con mismo Message-ID, attachments), InsightProvider plugin
   opcional + AnthropicInsightProvider (claude-haiku-4-5). El ws-hub NO migró:
   el engine expone ChangeNotifier (interface) y el hub real va a apps/server.
+- infra+bmailctl: hechos y commiteados (5b3b020); feedbackHost corregido,
+  esquema lean en dns-records.ts, ~/.bmailctl.json implementado.
