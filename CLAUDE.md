@@ -65,7 +65,7 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
        - InsightProvider: ai-service.ts como plugin inyectable en SyncEngine
        - NO migrar (código muerto Outlook): mail-sender.ts, auth.ts (MSAL),
          ws-handler.ts, cli.ts (roto), dep @azure/msal-node
-- [ ] 5. `apps/server`: server.ts + route-*.ts + ws-hub.ts + middleware-auth.ts,
+- [x] 5. `apps/server`: server.ts + route-*.ts + ws-hub.ts + middleware-auth.ts,
        rutas finas sobre engine. Añadir auth bearer junto a la cookie.
        Fijar SESSION_SECRET requerido de env (hoy: random por arranque).
 - [ ] 6. `client`: extraer web/src/api.ts + ws.ts → SDK con fetch/WS/baseUrl
@@ -89,7 +89,7 @@ Cada paso deja el sistema corriendo. Marcar [x] al completar.
         - [x] engine: extraer adjuntos en getMessage (mailparser ya los parsea),
           exponer listado {filename, contentType, size, partId} en FullMessage
           (+ MailService.getAttachment(folder, uid, partId) → bytes)
-        - server: GET /api/mailboxes/:folder/messages/:uid/attachments/:partId
+        - [x] server: GET /api/mailboxes/:folder/messages/:uid/attachments/:partId
           (stream, Content-Disposition attachment)
         - [x] engine/SmtpSender: adjuntos en envío (nodemailer attachments)
         - contract: tipos AttachmentInfo; client: métodos download/upload
@@ -163,5 +163,9 @@ subject, FTS5) OK.
   best-effort con mismo Message-ID, attachments), InsightProvider plugin
   opcional + AnthropicInsightProvider (claude-haiku-4-5). El ws-hub NO migró:
   el engine expone ChangeNotifier (interface) y el hub real va a apps/server.
+- `apps/server` (paso 5 + endpoint de adjuntos de 11): rutas finas sobre engine,
+  WsHub implementa ChangeNotifier, auth cookie+bearer (login devuelve el token),
+  SESSION_SECRET obligatorio, adjuntos en /api/send como JSON base64 (multipart
+  es TODO); `tsc -b` y smoke test de arranque verdes.
 - infra+bmailctl: hechos y commiteados (5b3b020); feedbackHost corregido,
   esquema lean en dns-records.ts, ~/.bmailctl.json implementado.

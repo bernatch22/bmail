@@ -1,0 +1,33 @@
+{
+  "name": "@bmail/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "BMail HTTP/WS server: thin Express routes and a WebSocket hub wired over @bmail/engine. No business logic here.",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsx src/main.ts",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@bmail/contract": "*",
+    "@bmail/db": "*",
+    "@bmail/engine": "*",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.13",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}
