@@ -1,0 +1,22 @@
+{
+  "name": "@bmail/contract",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared API/wire types for BMail. Zero runtime dependencies.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}

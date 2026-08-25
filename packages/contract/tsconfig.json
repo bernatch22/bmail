@@ -1,0 +1,9 @@
+{
+  // @bmail/contract — the leaf of the dependency graph: no references.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
