@@ -44,6 +44,30 @@ function threadIdOf(message: Pick<MessageEnvelope, 'threadId' | 'subject'>): str
  * Real folder of a thread message. The thread endpoint marks cross-folder
  * sent copies with "__sent__", which is a marker, not an IMAP path.
  */
+/**
+ * The thread endpoint serves rows from the local store, which persists only
+ * the `hasAttachments` flag — never the attachment list (that lives in IMAP
+ * and `getMessage` fetches it live). So a thread card flagged with attachments
+ * arrives with no `attachments`, and the chips vanish. Fill them in from
+ * `getMessage` for exactly those cards: a handful per thread at most, and
+ * only when the flag says there is something to show.
+ */
+async function withAttachments(thread: FullMessage[], currentFolder: string): Promise<FullMessage[]> {
+  return Promise.all(
+    thread.map(async (message) => {
+      if (!message.hasAttachments || message.attachments) return message;
+      try {
+        const full = await client.getMessage(folderOf(message, currentFolder), message.uid);
+        return { ...message, attachments: full.attachments ?? [] };
+      } catch (err: unknown) {
+        // A failed metadata fetch must not hide the message itself.
+        console.error('Failed to load attachments:', err instanceof Error ? err.message : err);
+        return message;
+      }
+    }),
+  );
+}
+
 function folderOf(message: FullMessage, currentFolder: string): string {
   if (message.folder && message.folder !== '__sent__') {
     return message.folder;
@@ -166,7 +190,7 @@ export function MailPage({ navigate }: MailPageProps) {
       try {
         // Fetch full thread from API (cross-folder: includes sent messages)
         const threadId = threadIdOf(envelope);
-        const thread = await client.getThread(threadId);
+        const thread = await withAttachments(await client.getThread(threadId), folder);
 
         // Latest message is the last one (sorted by date ASC from API)
         const latest = thread[thread.length - 1] ?? (envelope as FullMessage);
